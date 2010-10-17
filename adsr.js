@@ -37,3 +37,35 @@ document.params = {
     release: 40
 };
 
+function beginDrag(evt) {
+    console.log('begin drag ' + evt.target);
+    var element = evt.target;
+    element.dragStartX = evt.clientX;
+    element.dragStartY = evt.clientY;
+    element.onmouseup = endDrag;
+    element.onmouseout = endDrag;
+    element.onmousemove = dragging;
+}
+
+function dragging(evt) {
+    var element = evt.target;
+    console.log('dragging ' + evt.target
+                + ' evt.x: ' + evt.clientX + ' evt.y: ' + evt.clientY
+                + ' x: ' + element.getAttribute('x') + ' y: ' + element.getAttribute('y'));
+    var deltaX = evt.clientX - element.dragStartX;
+    var deltaY = evt.clientY - element.dragStartY;
+    element.dragStartX = evt.clientX;
+    element.dragStartY = evt.clientY;
+    document.params.attack += deltaX;
+    drawEnvelope();
+}
+
+function endDrag(evt) {
+    console.log('end drag ' + evt.target);
+    var element = evt.target;
+    element.onmouseup = undefined;
+    element.onmouseout = undefined;
+    element.onmousemove = undefined;
+}
+
+$('attack').onmousedown = beginDrag;
