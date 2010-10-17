@@ -29,13 +29,12 @@ function drawEnvelope()
     $('path').setAttribute('d', path);
 }
 
-document.drawEnvelope = drawEnvelope;
-document.params = {
-    attack: 10,
-    decay: 30,
-    sustain: 100,
-    release: 40
-};
+function doAllHandles(f) {
+    var handles = document.getElementsByClassName('handle');
+    for (var i = 0; i < handles.length; i++) {
+        f(handles[i]);
+    }
+}
 
 var drag = undefined;
 
@@ -84,13 +83,15 @@ function endDrag(evt) {
     }
 }
 
-function doAllHandles(f) {
-    var handles = document.getElementsByClassName('handle');
-    for (var i = 0; i < handles.length; i++) {
-        f(handles[i]);
-    }
-}
-
 doAllHandles(function (handle) { handle.onmousedown = beginDrag; });
 
 document.onmouseup = endDrag;
+document.drawEnvelope = drawEnvelope;
+document.params = {
+    attack: 10,
+    decay: 30,
+    sustain: 100,
+    release: 40
+};
+
+drawEnvelope();
