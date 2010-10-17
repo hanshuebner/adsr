@@ -13,9 +13,9 @@ function drawEnvelope()
     function positionMarker(id, x, y, yoffset)
     {
 	if (yoffset == undefined) {
-	    yoffset = -3;
+	    yoffset = -8;
 	}
-	$(id).setAttribute('x', x - 3);
+	$(id).setAttribute('x', x - 8);
 	$(id).setAttribute('y', y + yoffset);
 	path = path + 'L ' + x + ' ' + y;
     }
@@ -37,35 +37,60 @@ document.params = {
     release: 40
 };
 
+var drag = undefined;
+
 function beginDrag(evt) {
     console.log('begin drag ' + evt.target);
-    var element = evt.target;
-    element.dragStartX = evt.clientX;
-    element.dragStartY = evt.clientY;
-    element.onmouseup = endDrag;
-    element.onmouseout = endDrag;
-    element.onmousemove = dragging;
+    drag = {
+        element: evt.target,
+        prevX: evt.clientX,
+        prevY: evt.clientY
+    };
+    var id = evt.target.id;
+    drag.ondrag = function (deltaX, deltaY) {
+        var param = document.params[id];
+        switch (id) {
+        case 'attack':
+        case 'decay':
+        case 'release':
+            param += deltaX;
+            break;
+        case 'sustain':
+            param += deltaY;
+            break;
+        }
+        document.params[id] = Math.max(0, Math.min(127, param));
+    }
+    document.onmousemove = dragging;
 }
 
 function dragging(evt) {
-    var element = evt.target;
     console.log('dragging ' + evt.target
-                + ' evt.x: ' + evt.clientX + ' evt.y: ' + evt.clientY
-                + ' x: ' + element.getAttribute('x') + ' y: ' + element.getAttribute('y'));
-    var deltaX = evt.clientX - element.dragStartX;
-    var deltaY = evt.clientY - element.dragStartY;
-    element.dragStartX = evt.clientX;
-    element.dragStartY = evt.clientY;
-    document.params.attack += deltaX;
+                + ' evt.x: ' + evt.clientX + ' evt.y: ' + evt.clientY);
+    var deltaX = evt.clientX - drag.prevX;
+    var deltaY = evt.clientY - drag.prevY;
+    drag.ondrag(deltaX, -deltaY);
+    drag.prevX = evt.clientX;
+    drag.prevY = evt.clientY;
     drawEnvelope();
 }
 
 function endDrag(evt) {
     console.log('end drag ' + evt.target);
     var element = evt.target;
-    element.onmouseup = undefined;
-    element.onmouseout = undefined;
-    element.onmousemove = undefined;
+    if (drag) {
+        document.onmousemove = undefined;
+        drag = undefined;
+    }
 }
 
-$('attack').onmousedown = beginDrag;
+function doAllHandles(f) {
+    var handles = document.getElementsByClassName('handle');
+    for (var i = 0; i < handles.length; i++) {
+        f(handles[i]);
+    }
+}
+
+doAllHandles(function (handle) { handle.onmousedown = beginDrag; });
+
+document.onmouseup = endDrag;
