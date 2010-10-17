@@ -39,7 +39,7 @@ function doAllHandles(f) {
 var drag = undefined;
 
 function beginDrag(evt) {
-    console.log('begin drag ' + evt.target);
+    // console.log('begin drag ' + evt.target);
     drag = {
         element: evt.target,
         prevX: evt.clientX,
@@ -64,8 +64,8 @@ function beginDrag(evt) {
 }
 
 function dragging(evt) {
-    console.log('dragging ' + evt.target
-                + ' evt.x: ' + evt.clientX + ' evt.y: ' + evt.clientY);
+    // console.log('dragging ' + evt.target
+    //            + ' evt.x: ' + evt.clientX + ' evt.y: ' + evt.clientY);
     var deltaX = evt.clientX - drag.prevX;
     var deltaY = evt.clientY - drag.prevY;
     drag.ondrag(deltaX, -deltaY);
@@ -76,6 +76,9 @@ function dragging(evt) {
 
 function endDrag(evt) {
     console.log('end drag ' + evt.target);
+    var event = document.createEvent('HTMLEvents');
+    event.initEvent('change', true, true);
+    document.dispatchEvent(event);
     var element = evt.target;
     if (drag) {
         document.onmousemove = undefined;
