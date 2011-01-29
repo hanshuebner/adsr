@@ -1,19 +1,29 @@
+
+var log;
+
+try {
+    log = console.log;
+}
+catch (e) {
+    log = function () {}
+}
+
 $(document).ready(function () {
-        console.log('ready');
+        log('ready');
         $('form').submit(function () {
-                console.log('submit');
+                log('submit');
                 return false;
             });
         $('.adsr').map(function () {
-                console.log('adsr: ' + this);
+                log('adsr: ' + this);
                 var svgDoc = this.getSVGDocument();
                 svgDoc.drawEnvelope();
                 svgDoc.onchange = function () {
                     var params = svgDoc.params;
-                    console.log('change attack: ' + params.attack
-                                + ' decay: ' + params.decay
-                                + ' sustain: ' + params.sustain
-                                + ' release: ' + params.release);
+                    log('change attack: ' + params.attack
+                        + ' decay: ' + params.decay
+                        + ' sustain: ' + params.sustain
+                        + ' release: ' + params.release);
                 }
             });
     });

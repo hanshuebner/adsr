@@ -75,7 +75,7 @@ function dragging(evt) {
 }
 
 function endDrag(evt) {
-    console.log('end drag ' + evt.target);
+    // console.log('end drag ' + evt.target);
     var event = document.createEvent('HTMLEvents');
     event.initEvent('change', true, true);
     document.dispatchEvent(event);
