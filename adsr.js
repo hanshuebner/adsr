@@ -21,11 +21,12 @@ function drawEnvelope()
     }
 
     var sustainLength = 40;
-
-    positionMarker('attack', params.attack, 128);
-    positionMarker('decay', params.attack + params.decay, params.sustain);
-    positionMarker('sustain', params.attack + params.decay + sustainLength, params.sustain);
-    positionMarker('release', params.attack + params.decay + sustainLength + params.release, 0, 0);
+    
+    positionMarker('delay', params.delay, 0);
+    positionMarker('attack', params.delay + params.attack, 128);
+    positionMarker('decay', params.delay + params.attack + params.decay, params.sustain);
+    positionMarker('sustain', params.delay + params.attack + params.decay + sustainLength, params.sustain);
+    positionMarker('release', params.delay + params.attack + params.decay + sustainLength + params.release, 0, 0);
     $('path').setAttribute('d', path);
 }
 
@@ -49,6 +50,7 @@ function beginDrag(evt) {
     drag.ondrag = function (deltaX, deltaY) {
         var param = document.params[id];
         switch (id) {
+        case 'delay':
         case 'attack':
         case 'decay':
         case 'release':
@@ -86,11 +88,19 @@ function endDrag(evt) {
     }
 }
 
-doAllHandles(function (handle) { handle.onmousedown = beginDrag; });
+function highlightHandle(evt) {
+    event.target.style = 'fill: #d00';
+}
+
+doAllHandles(function (handle) {
+    handle.onmousedown = beginDrag;
+    handle.onmouseover = highlightHandle;
+});
 
 document.onmouseup = endDrag;
 document.drawEnvelope = drawEnvelope;
 document.params = {
+    delay: 20,
     attack: 10,
     decay: 30,
     sustain: 100,

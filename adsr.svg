@@ -11,6 +11,7 @@
 
   <g id='envelope' transform='translate(1, 140) scale(1, -1)'>
     <path id='path' style="fill: #ddd; stroke: orange; stroke-width: 4"/>
+    <rect id='delay' class='handle' width='16' height='16'/>
     <rect id='attack' class='handle' width='16' height='16'/>
     <rect id='decay' class='handle' width='16' height='16'/>
     <rect id='sustain' class='handle' width='16' height='16'/>

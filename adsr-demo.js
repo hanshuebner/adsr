@@ -1,11 +1,6 @@
 
-var log;
-
-try {
-    log = console.log;
-}
-catch (e) {
-    log = function () {}
+function log(message) {
+    console.log(message);
 }
 
 $(document).ready(function () {
@@ -20,7 +15,8 @@ $(document).ready(function () {
                 svgDoc.drawEnvelope();
                 svgDoc.onchange = function () {
                     var params = svgDoc.params;
-                    log('change attack: ' + params.attack
+                    log('change delay: ' + params.delay
+                        + ' attack: ' + params.attack
                         + ' decay: ' + params.decay
                         + ' sustain: ' + params.sustain
                         + ' release: ' + params.release);
