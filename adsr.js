@@ -7,7 +7,7 @@ function $(id)
 
 function drawEnvelope()
 {
-    var path = 'M0 0';
+    var path;
     var params = document.params;
 
     function positionMarker(id, x, y, yoffset)
@@ -17,12 +17,16 @@ function drawEnvelope()
 	}
 	$(id).setAttribute('x', x - 8);
 	$(id).setAttribute('y', y + yoffset);
-	path = path + 'L ' + x + ' ' + y;
+        if (path) {
+	    path = path + 'L ' + x + ' ' + y;
+        } else {
+            path = 'M' + x + ' ' + y;
+        }
     }
 
     var sustainLength = 40;
     
-    positionMarker('delay', params.delay, 0);
+    positionMarker('delay', params.delay, 0, 0);
     positionMarker('attack', params.delay + params.attack, 128);
     positionMarker('decay', params.delay + params.attack + params.decay, params.sustain);
     positionMarker('sustain', params.delay + params.attack + params.decay + sustainLength, params.sustain);
@@ -74,14 +78,14 @@ function dragging(evt) {
     drag.prevX = evt.clientX;
     drag.prevY = evt.clientY;
     drawEnvelope();
-}
-
-function endDrag(evt) {
-    // console.log('end drag ' + evt.target);
     var event = document.createEvent('HTMLEvents');
     event.initEvent('change', true, true);
     document.dispatchEvent(event);
     var element = evt.target;
+}
+
+function endDrag(evt) {
+    // console.log('end drag ' + evt.target);
     if (drag) {
         document.onmousemove = undefined;
         drag = undefined;
